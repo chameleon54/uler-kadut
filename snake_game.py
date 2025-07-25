@@ -160,6 +160,9 @@ class SnakeGame:
         back = Button("Back", 300, 440, 200, 60, BRIGHT_BLUE, WHITE, self.font, action="back")
         buttons = [easy, medium, hard, back]
 
+        notification = ""
+        notification_timer = 0
+
         while self.state == "difficulty":
             self.screen.fill(DARK_GREY)
             title = self.large_font.render("Select Difficulty", True, WHITE)
@@ -180,10 +183,22 @@ class SnakeGame:
                         self.state = "menu"
                     else:
                         self.difficulty = button.action
-                        self.state = "menu"
+                        if button.action == 5:
+                            notification = "Difficulty set to Easy"
+                        elif button.action == 10:
+                            notification = "Difficulty set to Medium"
+                        elif button.action == 20:
+                            notification = "Difficulty set to Hard"
+                        notification_timer = pygame.time.get_ticks()
+
+            # Draw notification (for 2 seconds)
+            if notification and pygame.time.get_ticks() - notification_timer < 2000:
+                notif_text = self.font.render(notification, True, WHITE)
+                self.screen.blit(notif_text, notif_text.get_rect(center=(SCREEN_WIDTH // 2, 530)))
 
             pygame.display.flip()
             self.clock.tick(60)
+
 
     def run(self):
         while self.state != "quit":
